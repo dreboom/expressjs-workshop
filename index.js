@@ -15,6 +15,14 @@ app.get('/hello', function(request, response) {
 
 
 
+//Exercise 2 - Create a web server that can listen to requests for /hello/:firstName, and respond with some HTML that says <h1>Hello _name_!</h1>.
+
+app.get('/hello/:firstName', function(request, response) {
+  var firstName = request.params.firstName;
+  response.send('Hello ' + firstName);
+});
+
+
 
 
 
