@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 
 // // app.get('/', function (req, res) {
@@ -141,15 +142,15 @@ var Vote = db.define('vote', {
 // }
 
 
-// function createNewContent(userId, url, title, callback) {
-//     Content.create({
-//         userId: userId,
-//         url: url,
-//         title: title,
-//     }).then(function(NewContent) {
-//         callback(NewContent);
-//     });
-// }
+function createNewContent(userId, url, title, callback) {
+    Content.create({
+        userId: userId,
+        url: url,
+        title: title,
+    }).then(function(NewContent) {
+        callback(NewContent);
+    });
+}
 // createNewContent(1, 'http://www.google.com', 'google', function(NewContent){console.log(NewContent)});
 
 
@@ -173,12 +174,13 @@ Content.belongsToMany(User, {
 app.get('/contents', function(request, response) {
         Content.findAll({
         limit: 5,
-        attributes: ['title', 'url', 'userId']
+        include: User,
+        order: [['createdAt', 'DESC']]
     }).then(function(returnedContent) {
-        
+        console.log(JSON.stringify(returnedContent, 0, 4))
         var listLi = "";
         returnedContent.forEach(function(item){
-            listLi = listLi + "<li>Title: "+item.title+"<br>Url: "+item.url+"<br>User: "+item.userId+"</li>";
+            listLi = listLi + "<li>Title: "+item.title+"<br>Url: "+item.url+"<br>User: "+item.user.username+"</li>";
         });
         var htmlCore = "<div><h1>List of Contents</h1><ul>"+listLi+"</ul></div>";
         listLi.length > 0 ? response.send(htmlCore) : response.send("Check your Code!");
@@ -207,6 +209,22 @@ app.get('/createContent', function (req, res, next) {
   });
 
 });
+
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.post('/createContent', function (req, res) {
+  console.log(req.body);
+  
+  createNewContent(1, req.body.url, req.body.title, function(content) {
+    //   res.send("OK!");
+    res.redirect('/contents');
+  });
+  
+});
+
+
+
 
 // ======================================================================================
 
