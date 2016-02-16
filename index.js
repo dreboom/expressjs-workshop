@@ -178,27 +178,35 @@ app.get('/contents', function(request, response) {
         
         var listLi = "";
         returnedContent.forEach(function(item){
-            listLi = listLi + "<li>Title: "+item.title+"<br>Url: "+item.url+"<br>User: "+item.userId+"</li>"
-        })
+            listLi = listLi + "<li>Title: "+item.title+"<br>Url: "+item.url+"<br>User: "+item.userId+"</li>";
+        });
         var htmlCore = "<div><h1>List of Contents</h1><ul>"+listLi+"</ul></div>";
-        listLi.length > 0 ? response.send(htmlCore) : response.send("Check ya shit fool!")
+        listLi.length > 0 ? response.send(htmlCore) : response.send("Check your Code!");
         
     });
 });
 
-// function buildHtmlList(arrayOfContents){}
-// function retireveTopFiveContents(callback){}
-// app.get('/contents', function(request, response) {
-//     retrieveTopFiveContents(function(contents) {
-//         var html = buildHtmlList(contents);
-        
-//         response.send(html);
-//     });
-// });
 
 
-//set date = to timestamp(now())
 
+
+// Exercise 5: In this exercise, we're going to use Express to simply send an HTML file to our user containing a <form>
+// sing ExpressJS create a GET endpoint called createContent. We will use the Express res.sendFile function to serve the 
+// form.html file when someone requests the /createContent resource with a GET.
+
+app.get('/createContent', function (req, res, next) {
+
+  res.sendFile(__dirname + '/form.html', function (err) {
+    if (err) {
+      console.log(err);
+      res.status(err.status).end();
+    }
+    else {
+      console.log('Sent form.html');
+    }
+  });
+
+});
 
 // ======================================================================================
 
